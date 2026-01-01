@@ -3,7 +3,7 @@ name: Update LIC Dashboard
 on:
   schedule:
     - cron: '0 */6 * * *' # Runs every 6 hours
-  workflow_dispatch: # Allows you to click a button to run it manually
+  workflow_dispatch: # Manual trigger button
 
 permissions:
   contents: write
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'  # <--- CHANGED FROM 3.9 TO 3.10
 
       - name: Install Dependencies
         run: |
@@ -36,6 +36,11 @@ jobs:
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add lic_data.json
-          git commit -m "Auto-update LIC data" || echo "No changes to commit"
-          git push
+          # Check if file exists before adding to avoid error
+          if [ -f lic_data.json ]; then
+            git add lic_data.json
+            git commit -m "Auto-update LIC data" || echo "No changes to commit"
+            git push
+          else
+            echo "lic_data.json not found, skipping commit."
+          fi

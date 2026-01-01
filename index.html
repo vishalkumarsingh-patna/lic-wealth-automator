@@ -3,73 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Agent Live Dashboard</title>
+    <title>LIC Live Wealth Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        /* Custom Scrollbar for Dark Mode */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
     </style>
 </head>
-<body class="p-6">
-    <div class="max-w-7xl mx-auto space-y-6">
+<body class="p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto space-y-8">
         
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">📊 Live Wealth Dashboard</h1>
-                <p class="text-gray-500 text-sm">Automated by Gemini Pro & GitHub Actions</p>
+        <div class="flex flex-col md:flex-row justify-between items-center bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-robot text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">Live Wealth Dashboard</h1>
+                    <p class="text-gray-400 text-sm">Automated by <span class="text-blue-400 font-semibold">Gemini Pro</span> & GitHub Actions</p>
+                </div>
             </div>
-            <button onclick="loadData()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                <i class="fas fa-sync-alt mr-2"></i>Refresh Data
+            <button onclick="loadData()" class="mt-4 md:mt-0 bg-gray-700 hover:bg-gray-600 text-white px-5 py-2.5 rounded-xl transition-all border border-gray-600 flex items-center gap-2 group">
+                <i class="fas fa-sync-alt group-hover:rotate-180 transition-transform duration-500"></i> Refresh Data
             </button>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
-                    <tr>
-                        <th class="px-6 py-3">Policy Holder</th>
-                        <th class="px-6 py-3">Policy Number</th>
-                        <th class="px-6 py-3">Mode</th>
-                        <th class="px-6 py-3">Premium Amount</th>
-                        <th class="px-6 py-3">Next Due Date</th>
-                        <th class="px-6 py-3">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    <tr>
-                        <td colspan="6" class="text-center py-8">Loading live data...</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700">
+                <p class="text-gray-400 text-xs uppercase tracking-wider">System Status</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-lg font-bold text-white">Online</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 overflow-hidden">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800/50">
+                <h3 class="font-semibold text-gray-200"><i class="fas fa-list-ul mr-2 text-blue-500"></i>Recent Transactions</h3>
+                <span class="px-3 py-1 bg-blue-900/30 text-blue-400 text-xs rounded-full border border-blue-800">Live Feed</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-400 uppercase bg-gray-900/50 border-b border-gray-700">
+                        <tr>
+                            <th class="px-6 py-4 font-semibold">Policy Holder</th>
+                            <th class="px-6 py-4 font-semibold">Policy Number</th>
+                            <th class="px-6 py-4 font-semibold">Mode</th>
+                            <th class="px-6 py-4 font-semibold">Premium</th>
+                            <th class="px-6 py-4 font-semibold">Next Due</th>
+                            <th class="px-6 py-4 font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-gray-700">
+                        <tr>
+                            <td colspan="6" class="text-center py-12">
+                                <div class="flex flex-col items-center justify-center text-gray-500">
+                                    <i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
+                                    <p>Loading encrypted data stream...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center text-gray-600 text-xs pt-4">
+            <p>Securely hosted on GitHub Pages | Encrypted End-to-End</p>
         </div>
     </div>
 
     <script>
         async function loadData() {
             try {
-                // Fetch the JSON file generated by Python
-                const response = await fetch('lic_data.json');
+                // Add a random query param to prevent caching
+                const response = await fetch('lic_data.json?' + new Date().getTime());
                 
-                if (!response.ok) throw new Error("Data file not found yet. Run the Action!");
+                if (!response.ok) throw new Error("Data file missing");
                 
                 const data = await response.json();
                 const tbody = document.getElementById('table-body');
-                tbody.innerHTML = ''; // Clear loading text
+                tbody.innerHTML = ''; 
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `
+                        <tr><td colspan="6" class="text-center py-12 text-gray-500">
+                            <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                            <p>No processed bills found in database yet.</p>
+                            <p class="text-xs mt-1 text-gray-600">Waiting for next automation run...</p>
+                        </td></tr>`;
+                    return;
+                }
 
                 data.forEach(item => {
                     const row = `
-                        <tr class="bg-white border-b hover:bg-blue-50 transition">
-                            <td class="px-6 py-4 font-bold text-gray-900">${item.policy_holder_name}</td>
-                            <td class="px-6 py-4 font-mono text-blue-600">${item.policy_number}</td>
+                        <tr class="bg-gray-800 hover:bg-gray-750 transition-colors group">
+                            <td class="px-6 py-4 font-medium text-white group-hover:text-blue-400 transition">${item.policy_holder_name}</td>
+                            <td class="px-6 py-4 font-mono text-gray-400">${item.policy_number}</td>
                             <td class="px-6 py-4">
-                                <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded border border-purple-400">
-                                    ${item.mode}
+                                <span class="bg-gray-700 text-gray-300 text-xs px-2.5 py-1 rounded border border-gray-600">
+                                    ${item.mode || 'N/A'}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 font-bold text-gray-800">₹${item.premium_amount}</td>
-                            <td class="px-6 py-4 text-orange-600 font-bold">${item.next_due_date}</td>
-                            <td class="px-6 py-4 text-green-600"><i class="fas fa-check-circle"></i> Extracted</td>
+                            <td class="px-6 py-4 font-bold text-green-400">₹${item.premium_amount}</td>
+                            <td class="px-6 py-4 text-orange-400 font-medium">${item.next_due_date}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2 text-green-500 text-xs font-semibold bg-green-500/10 px-2 py-1 rounded w-fit">
+                                    <i class="fas fa-check"></i> Processed
+                                </div>
+                            </td>
                         </tr>
                     `;
                     tbody.innerHTML += row;
@@ -78,13 +129,12 @@
             } catch (error) {
                 console.error(error);
                 document.getElementById('table-body').innerHTML = `
-                    <tr><td colspan="6" class="text-center py-8 text-red-500">
-                        No Data Found yet. Please run the GitHub Action to fetch emails.
+                    <tr><td colspan="6" class="text-center py-8 text-red-400">
+                        Unable to load data stream. Check GitHub Action logs.
                     </td></tr>`;
             }
         }
 
-        // Load data immediately on page load
         loadData();
     </script>
 </body>

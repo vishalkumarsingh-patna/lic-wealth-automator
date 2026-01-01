@@ -2,244 +2,237 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vishal's Wealth Dashboard</title>
+    <title>Vishal's DevOps Console</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0f172a;       /* Dark Background */
-            --card-dark: #1e293b;     /* Card Background */
-            --text-light: #e2e8f0;    /* Text Color */
-            --border-dark: #334155;
-            --primary: #3b82f6;       /* Blue */
-            --accent: #eab308;        /* Yellow */
-            --growth: #22c55e;        /* Green */
-            --alert: #ef4444;         /* Red */
+            --bg-color: #050505;
+            --card-bg: #0a0a0a;
+            --neon-blue: #00f3ff;
+            --neon-green: #0aff00;
+            --text-color: #e0fbfc;
+            --grid-line: rgba(0, 243, 255, 0.1);
         }
         
         body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background-color: var(--bg-dark); 
-            color: var(--text-light);
+            font-family: 'Share Tech Mono', monospace; 
+            background-color: var(--bg-color); 
+            color: var(--text-color);
             margin: 0; 
             padding: 20px;
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { background-position: 0 0; }
+            100% { background-position: 30px 30px; }
         }
         
-        /* Main A4 Card Style */
-        .bill-card {
+        /* Main Container */
+        .console-card {
             max-width: 210mm;
-            margin: auto;
-            background: var(--card-dark);
-            border: 1px solid var(--border-dark);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin: 40px auto;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid var(--neon-blue);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
             position: relative;
+            backdrop-filter: blur(5px);
         }
 
-        /* Header Section */
+        /* Techy Header */
         .header {
-            background: linear-gradient(135deg, #1e3a8a, #172554);
-            padding: 25px 40px;
+            border-bottom: 1px solid var(--neon-blue);
+            padding: 20px;
             display: flex;
             align-items: center;
-            gap: 25px;
-            border-bottom: 2px solid var(--primary);
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Scanline Animation Effect */
+        .header::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
         }
 
-        .photo-container {
-            width: 100px; height: 120px; 
-            border: 3px solid rgba(255,255,255,0.2); 
-            border-radius: 8px;
-            overflow: hidden; 
-            flex-shrink: 0; 
-            background: #000;
+        .photo-frame {
+            width: 100px; height: 120px;
+            border: 2px solid var(--neon-blue);
+            padding: 3px;
+            box-shadow: 0 0 10px var(--neon-blue);
         }
-        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(80%) contrast(1.2); }
 
-        .header-text h1 { margin: 0; font-size: 24px; color: white; letter-spacing: 1px; }
-        .header-text p { margin: 5px 0; color: #93c5fd; font-size: 14px; }
-        .badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; }
-
-        /* Status Bar */
-        .payment-status {
-            background: #1e1b4b; /* Dark Indigo */
-            padding: 15px 40px;
-            border-bottom: 1px solid var(--border-dark);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Status Bar with Typing Effect */
+        .system-status {
+            font-size: 12px; color: var(--neon-green); margin-top: 5px;
+            border-left: 2px solid var(--neon-green);
+            padding-left: 10px;
+            height: 20px;
         }
 
-        /* Table Styling */
-        .content { padding: 25px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { 
-            background: #0f172a; 
-            color: #94a3b8; 
-            padding: 15px; 
-            text-align: left; 
-            font-size: 11px; 
-            text-transform: uppercase; 
-            border-bottom: 2px solid var(--border-dark);
+        /* The Table */
+        .data-grid { width: 100%; border-collapse: collapse; margin-top: 0; }
+        .data-grid th { 
+            text-align: left; padding: 15px; 
+            color: var(--neon-blue); 
+            border-bottom: 1px solid var(--neon-blue);
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        td { 
+        .data-grid td { 
             padding: 12px 15px; 
-            border-bottom: 1px solid var(--border-dark); 
-            font-size: 12px; 
-            color: var(--text-light); 
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            color: #ccc;
         }
-        tr:hover { background-color: #334155; } /* Hover Effect */
+        .data-grid tr:hover { background: rgba(0, 243, 255, 0.1); cursor: crosshair; }
 
-        .total-row { background: #172554; font-weight: bold; color: white; }
+        /* Glowing Buttons */
+        .btn-group { text-align: center; margin-bottom: 20px; }
+        .cyber-btn {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 5px var(--neon-blue);
+            margin: 0 10px;
+        }
+        .cyber-btn:hover {
+            background: var(--neon-blue);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
 
-        /* Footer & QR */
-        .footer-grid {
-            display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px;
-            padding: 20px 40px; background: #0f172a; border-top: 1px solid var(--border-dark);
-        }
-        .qr-box {
-            text-align: center; border: 1px solid var(--border-dark); padding: 10px; border-radius: 8px; background: white;
-        }
-
-        /* Buttons (Print & Refresh) */
-        .action-bar {
-            text-align: center; margin-bottom: 20px; display: flex; justify-content: center; gap: 15px;
-        }
-        .btn {
-            padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; display: flex; items-center; gap: 8px; transition: 0.3s;
-        }
-        .btn-print { background: var(--accent); color: #000; }
-        .btn-print:hover { background: #facc15; }
-        .btn-refresh { background: var(--primary); color: white; }
-        .btn-refresh:hover { background: #2563eb; }
-
-        /* --- SMART PRINTING RULES (Turns Dark Mode OFF for Paper) --- */
+        /* Smart Print (Clean White for Paper) */
         @media print {
-            body { background: white; color: black; padding: 0; }
-            .bill-card { 
-                box-shadow: none; border: none; max-width: 100%; 
-                background: white; color: black;
-            }
-            .action-bar { display: none; } /* Hide buttons */
-            .header { background: #eee; color: black; border-bottom: 2px solid #000; }
-            .header-text h1, .header-text p { color: black; }
-            .payment-status { background: white; border-bottom: 1px solid #ccc; color: black; }
-            th { background: #ddd; color: black; border-bottom: 1px solid #000; }
-            td { color: black; border-bottom: 1px solid #ccc; }
-            .content, .footer-grid { background: white; color: black; }
-            tr:hover { background: none; }
-            .total-row { background: #eee; color: black; }
-            .qr-box { border: 1px solid #000; }
+            body { background: white; color: black; animation: none; font-family: Arial, sans-serif; }
+            .console-card { border: none; box-shadow: none; margin: 0; color: black; }
+            .header, .data-grid th, .data-grid td, .photo-frame { border-color: black; box-shadow: none; color: black; }
+            .photo-frame img { filter: none; }
+            .btn-group, .system-status { display: none; }
+            .header::after { display: none; } /* Remove scanlines */
         }
     </style>
 </head>
 <body>
 
-    <div class="action-bar">
-        <button onclick="window.print()" class="btn btn-print">
-            <i class="fas fa-file-pdf"></i> Save as PDF / Print
+    <div class="btn-group">
+        <button onclick="window.print()" class="cyber-btn">
+            <i class="fas fa-print"></i> Generate Report
         </button>
-        <button onclick="location.reload()" class="btn btn-refresh">
-            <i class="fas fa-sync-alt"></i> Refresh Data
+        <button onclick="location.reload()" class="cyber-btn">
+            <i class="fas fa-sync"></i> Re-Sync Data
         </button>
     </div>
 
-    <div class="bill-card">
+    <div class="console-card">
         <div class="header">
-            <div class="photo-container">
+            <div class="photo-frame">
                 <img src="profile.jpg" onerror="this.src='https://via.placeholder.com/100?text=USER'" alt="Vishal">
             </div>
-            <div class="header-text">
-                <h1>Vishal Kumar Singh</h1>
-                <p>Senior Portfolio Manager | LIC Wealth Automation</p>
-                <div style="margin-top: 5px;">
-                    <span class="badge">DEVOPS ENGINEER</span>
-                    <span class="badge" style="background:green;">VERIFIED</span>
-                </div>
+            <div style="width: 100%;">
+                <h1 style="margin: 0; text-shadow: 0 0 5px var(--neon-blue);">VISHAL KUMAR SINGH</h1>
+                <p style="margin: 5px 0; font-size: 14px; color: #aaa;">// SENIOR DEVOPS ENGINEER | PORTFOLIO MANAGER</p>
+                <div class="system-status" id="typing-text"></div>
             </div>
         </div>
 
-        <div class="payment-status">
+        <div style="padding: 10px 20px; font-size: 10px; color: #555; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            > ESTABLISHING SECURE CONNECTION TO GMAIL SERVERS... OK<br>
+            > DECRYPTING LIC PAYLOADS USING GEMINI AI... OK<br>
+            > FETCHING LIVE MARKET DATA... PENDING
+        </div>
+
+        <table class="data-grid">
+            <thead>
+                <tr>
+                    <th>CLIENT_ID</th>
+                    <th>POLICY_KEY</th>
+                    <th>MODE</th>
+                    <th>AMOUNT (INR)</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tr><td colspan="5" style="text-align:center; padding:30px;">
+                    <i class="fas fa-microchip fa-spin" style="font-size:20px; color:var(--neon-blue)"></i> INITIALIZING DATA STREAM...
+                </td></tr>
+            </tbody>
+        </table>
+
+        <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--neon-blue);">
             <div>
-                <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Total Portfolio Value</div>
-                <div style="font-size: 20px; color: var(--growth); font-weight: bold;">₹1,28,703.20</div>
+                <div style="font-size: 10px; color: #888;">TOTAL ASSETS SECURED</div>
+                <div style="font-size: 24px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">₹1,28,703.20</div>
             </div>
             <div style="text-align: right;">
-                <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Next Due Check</div>
-                <div style="color: var(--accent); font-weight: bold;">04/01/2026</div>
-            </div>
-        </div>
-
-        <div class="content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Policy Holder</th>
-                        <th>Policy Number</th>
-                        <th>Mode</th>
-                        <th>Premium</th>
-                        <th>Due Date</th>
-                    </tr>
-                </thead>
-                <tbody id="bill-table-body">
-                    <tr><td colspan="5" style="text-align:center; padding:30px; color:#64748b;">
-                        <i class="fas fa-spinner fa-spin"></i> Loading secure data...
-                    </td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="footer-grid">
-            <div>
-                <strong style="color: var(--primary);">🚀 Automated by Gemini AI</strong>
-                <p style="font-size: 11px; margin-top: 5px; line-height: 1.5; color: #94a3b8;">
-                    This document is automatically generated from live email data using GitHub Actions and Python.
-                    <br><strong>System Status:</strong> <span style="color:var(--growth)">● Online</span>
-                </p>
-            </div>
-            <div class="qr-box">
-                <div style="font-size: 9px; color:black; font-weight: bold; margin-bottom: 5px;">SCAN TO PAY</div>
-                <img src="qr.jpeg" onerror="this.style.display='none'" alt="QR" style="width: 80px; height: 80px;">
+                 <img src="qr.jpeg" onerror="this.style.display='none'" style="width: 60px; border: 1px solid white; padding: 2px;">
+                <div style="font-size: 8px; margin-top: 5px;">SCAN_HASH_ID</div>
             </div>
         </div>
     </div>
 
     <script>
-        async function fetchBills() {
+        // Typing Animation Logic
+        const text = "SYSTEM ONLINE... MONITORING WEALTH PORTFOLIO... 100% SECURE.";
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typing-text").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        typeWriter();
+
+        // Fetch Data Logic
+        async function loadData() {
             try {
                 const response = await fetch('lic_data.json?' + new Date().getTime());
-                if (!response.ok) throw new Error("Data missing");
-                
                 const data = await response.json();
-                const tbody = document.getElementById('bill-table-body');
+                const tbody = document.getElementById('table-body');
                 tbody.innerHTML = '';
 
                 if (data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No recent bills found.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:red;">NO DATA PACKETS FOUND.</td></tr>';
                     return;
                 }
 
                 data.forEach(item => {
                     const row = `
                         <tr>
-                            <td style="font-weight:600; color:white;">${item.policy_holder_name || 'Client'}</td>
-                            <td style="font-family:monospace; color:#93c5fd;">${item.policy_number}</td>
-                            <td><span style="background:#334155; padding:2px 6px; border-radius:4px; font-size:10px;">${item.mode || '-'}</span></td>
-                            <td style="color:var(--growth); font-weight:bold;">₹${item.premium_amount}</td>
-                            <td style="color:var(--alert);">${item.next_due_date || 'Pending'}</td>
+                            <td style="color:white;">${item.policy_holder_name}</td>
+                            <td style="font-family: monospace; color: var(--neon-blue);">
+                                <i class="fas fa-lock" style="font-size:10px;"></i> ${item.policy_number}
+                            </td>
+                            <td><span style="border:1px solid #555; padding:2px 5px; font-size:10px;">${item.mode}</span></td>
+                            <td style="color:var(--neon-green); font-weight:bold;">₹${item.premium_amount}</td>
+                            <td><span style="color:var(--neon-green)">● ACTIVE</span></td>
                         </tr>
                     `;
                     tbody.innerHTML += row;
                 });
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('bill-table-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">System Error: Run GitHub Action first.</td></tr>';
+            } catch (err) {
+                console.log(err);
             }
         }
-        fetchBills();
+        loadData();
     </script>
-
 </body>
 </html>

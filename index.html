@@ -2,140 +2,238 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Live Wealth Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Wealth & Protection Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
-        /* Custom Scrollbar for Dark Mode */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        :root {
+            --primary: #003366;
+            --secondary: #00509d;
+            --accent: #ffcc00;
+            --growth: #28a745;
+            --alert: #d32f2f;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 20px;
+        }
+        
+        .bill-card {
+            max-width: 210mm; /* A4 Width */
+            margin: auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .photo-container {
+            width: 80px; height: 100px; border: 3px solid white; border-radius: 4px;
+            overflow: hidden; flex-shrink: 0; background: white; display: flex; align-items: center; justify-content: center; color: #333;
+        }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .payment-status {
+            background: #fff9c4;
+            padding: 15px 40px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .highlight-box {
+            background: var(--alert);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .content { padding: 25px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f1f5f9; color: var(--primary); padding: 12px; text-align: left; font-size: 11px; text-transform: uppercase; }
+        td { padding: 8px 12px; border-bottom: 1px solid #eee; font-size: 11px; color: #333; }
+        
+        td:first-child::before {
+            content: "• ";
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .total-row { background: #f8f9fa; font-weight: bold; }
+        .balance-row { background: #fffde7; font-size: 16px; color: var(--alert); font-weight: bold; border-top: 2px solid var(--accent); }
+
+        .motivation-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; padding: 0 25px 25px;
+        }
+
+        .m-card { padding: 12px; border-radius: 10px; font-size: 10px; line-height: 1.4; border: 1px solid #e0e0e0; }
+        .m-card h4 { margin: 0 0 5px 0; color: var(--primary); font-size: 11px; }
+
+        .footer-grid {
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px;
+            padding: 15px 25px; background: #fafafa; border-top: 1px solid #eee;
+        }
+
+        .pay-btn {
+            display: block; background: var(--growth); color: white; padding: 10px;
+            border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; text-align: center;
+            margin-top: 10px;
+        }
+
+        /* Loading Spinner */
+        .loading { text-align: center; padding: 20px; color: var(--secondary); }
+
     </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen">
+<body>
 
-    <div class="max-w-7xl mx-auto space-y-8">
-        
-        <div class="flex flex-col md:flex-row justify-between items-center bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-            <div class="flex items-center gap-4">
-                <div class="p-3 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/20">
-                    <i class="fas fa-robot text-2xl text-white"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold text-white tracking-tight">Live Wealth Dashboard</h1>
-                    <p class="text-gray-400 text-sm">Automated by <span class="text-blue-400 font-semibold">Gemini Pro</span> & GitHub Actions</p>
-                </div>
-            </div>
-            <button onclick="loadData()" class="mt-4 md:mt-0 bg-gray-700 hover:bg-gray-600 text-white px-5 py-2.5 rounded-xl transition-all border border-gray-600 flex items-center gap-2 group">
-                <i class="fas fa-sync-alt group-hover:rotate-180 transition-transform duration-500"></i> Refresh Data
-            </button>
+<div class="bill-card">
+    <div class="header">
+        <div class="photo-container">
+            <img src="img_vishal.jpg" onerror="this.src='https://via.placeholder.com/100x125?text=Profile'" alt="Profile">
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700">
-                <p class="text-gray-400 text-xs uppercase tracking-wider">System Status</p>
-                <div class="flex items-center gap-2 mt-1">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span class="text-lg font-bold text-white">Online</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 overflow-hidden">
-            <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800/50">
-                <h3 class="font-semibold text-gray-200"><i class="fas fa-list-ul mr-2 text-blue-500"></i>Recent Transactions</h3>
-                <span class="px-3 py-1 bg-blue-900/30 text-blue-400 text-xs rounded-full border border-blue-800">Live Feed</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="text-xs text-gray-400 uppercase bg-gray-900/50 border-b border-gray-700">
-                        <tr>
-                            <th class="px-6 py-4 font-semibold">Policy Holder</th>
-                            <th class="px-6 py-4 font-semibold">Policy Number</th>
-                            <th class="px-6 py-4 font-semibold">Mode</th>
-                            <th class="px-6 py-4 font-semibold">Premium</th>
-                            <th class="px-6 py-4 font-semibold">Next Due</th>
-                            <th class="px-6 py-4 font-semibold">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body" class="divide-y divide-gray-700">
-                        <tr>
-                            <td colspan="6" class="text-center py-12">
-                                <div class="flex flex-col items-center justify-center text-gray-500">
-                                    <i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-blue-500"></i>
-                                    <p>Loading encrypted data stream...</p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="text-center text-gray-600 text-xs pt-4">
-            <p>Securely hosted on GitHub Pages | Encrypted End-to-End</p>
+        <div class="header-text">
+            <h1 style="margin:0; font-size: 22px;">Wealth & Protection Dashboard</h1>
+            <p style="margin:5px 0; font-size: 14px;">Vishal Kumar Singh | Portfolio Manager</p>
+            <div style="font-size: 10px; opacity: 0.8;">Auth ID: 9934291260 | Patna, Bihar</div>
         </div>
     </div>
 
-    <script>
-        async function loadData() {
-            try {
-                // Add a random query param to prevent caching
-                const response = await fetch('lic_data.json?' + new Date().getTime());
-                
-                if (!response.ok) throw new Error("Data file missing");
-                
-                const data = await response.json();
-                const tbody = document.getElementById('table-body');
-                tbody.innerHTML = ''; 
+    <div class="payment-status">
+        <div>
+            <strong>Latest Payment Received:</strong> <span style="color: var(--growth); font-size: 16px;" id="last-paid-amount">₹0.00</span>
+        </div>
+        <div class="highlight-box">
+            NEXT DUE DATE CHECK
+        </div>
+    </div>
 
-                if (data.length === 0) {
-                    tbody.innerHTML = `
-                        <tr><td colspan="6" class="text-center py-12 text-gray-500">
-                            <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
-                            <p>No processed bills found in database yet.</p>
-                            <p class="text-xs mt-1 text-gray-600">Waiting for next automation run...</p>
-                        </td></tr>`;
-                    return;
-                }
+    <div class="content">
+        <table>
+            <thead>
+                <tr>
+                    <th>Policy Holder</th>
+                    <th>Policy Number</th>
+                    <th>Mode</th>
+                    <th>Premium</th>
+                    <th>Next Due</th>
+                </tr>
+            </thead>
+            <tbody id="bill-table-body">
+                <tr><td colspan="5" class="loading">Fetching data from Secure Database...</td></tr>
+            </tbody>
+            <tfoot id="bill-table-foot">
+                </tfoot>
+        </table>
+    </div>
 
-                data.forEach(item => {
-                    const row = `
-                        <tr class="bg-gray-800 hover:bg-gray-750 transition-colors group">
-                            <td class="px-6 py-4 font-medium text-white group-hover:text-blue-400 transition">${item.policy_holder_name}</td>
-                            <td class="px-6 py-4 font-mono text-gray-400">${item.policy_number}</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-gray-700 text-gray-300 text-xs px-2.5 py-1 rounded border border-gray-600">
-                                    ${item.mode || 'N/A'}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 font-bold text-green-400">₹${item.premium_amount}</td>
-                            <td class="px-6 py-4 text-orange-400 font-medium">${item.next_due_date}</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-2 text-green-500 text-xs font-semibold bg-green-500/10 px-2 py-1 rounded w-fit">
-                                    <i class="fas fa-check"></i> Processed
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    tbody.innerHTML += row;
-                });
+    <div class="motivation-grid">
+        <div class="m-card" style="background: #fdf2f2; border-left: 4px solid #d32f2f;">
+            <h4>🧠 Money Discipline</h4>
+            Your mind is like a muscle. Paying today shows you have the <strong>discipline of the 1%</strong>.
+        </div>
+        <div class="m-card" style="background: #f0fdf4; border-left: 4px solid #16a34a;">
+            <h4>🌱 Seed of Growth</h4>
+            Every ₹100 saved is a seed for a tree that shades your children.
+        </div>
+        <div class="m-card" style="background: #eff6ff; border-left: 4px solid #2563eb;">
+            <h4>🎓 Child Education</h4>
+            These payments ensure that when your children are ready for university, their **financial wings** are built.
+        </div>
+    </div>
 
-            } catch (error) {
-                console.error(error);
-                document.getElementById('table-body').innerHTML = `
-                    <tr><td colspan="6" class="text-center py-8 text-red-400">
-                        Unable to load data stream. Check GitHub Action logs.
-                    </td></tr>`;
+    <div class="footer-grid">
+        <div style="font-size: 11px; line-height: 1.5;">
+            <strong style="color: var(--primary);">📊 Remaining Strategy:</strong>
+            <p style="margin:5px 0;">Maintaining this timeline keeps your 100% bonus eligibility intact.</p>
+        </div>
+
+        <div class="qr-box" style="text-align: center; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+            <div style="font-size: 9px; font-weight: bold; margin-bottom: 5px;">SCAN TO PAY BALANCE</div>
+            <img src="qr.jpeg" onerror="this.style.display='none'" alt="QR" style="width: 80px; height: 80px; object-fit: contain;">
+            <a href="#" class="pay-btn">PAY BALANCE</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function fetchBills() {
+        try {
+            // Add timestamp to avoid caching
+            const response = await fetch('lic_data.json?' + new Date().getTime());
+            if (!response.ok) throw new Error("Data not found");
+            
+            const data = await response.json();
+            const tbody = document.getElementById('bill-table-body');
+            const tfoot = document.getElementById('bill-table-foot');
+            tbody.innerHTML = '';
+            
+            let totalPremium = 0;
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No bills found yet. Send a test email!</td></tr>';
+                return;
             }
-        }
 
-        loadData();
-    </script>
+            // Create Rows
+            data.forEach(item => {
+                // Remove commas and symbols for calculation
+                let amountStr = String(item.premium_amount).replace(/[₹,]/g, '');
+                let amount = parseFloat(amountStr) || 0;
+                totalPremium += amount;
+
+                const row = `
+                    <tr>
+                        <td>${item.policy_holder_name || 'Valued Client'}</td>
+                        <td>${item.policy_number}</td>
+                        <td>${item.mode || 'N/A'}</td>
+                        <td>₹${amount.toLocaleString('en-IN')}</td>
+                        <td style="color:var(--alert); font-weight:bold;">${item.next_due_date || 'Pending'}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            // Update Totals
+            tfoot.innerHTML = `
+                <tr class="total-row">
+                    <td colspan="3" style="text-align: right;">Gross Portfolio Total:</td>
+                    <td colspan="2">₹${totalPremium.toLocaleString('en-IN')}</td>
+                </tr>
+                <tr class="balance-row">
+                    <td colspan="3" style="text-align: right;">TOTAL OUTSTANDING:</td>
+                    <td colspan="2">₹${totalPremium.toLocaleString('en-IN')}</td>
+                </tr>
+            `;
+
+            // Update Top Card (Last paid amount roughly matches the first bill found)
+            if(data.length > 0) {
+                 let firstAmount = String(data[0].premium_amount).replace(/[₹,]/g, '');
+                 document.getElementById('last-paid-amount').innerText = "₹" + parseFloat(firstAmount).toLocaleString('en-IN');
+            }
+
+        } catch (error) {
+            console.error(error);
+            document.getElementById('bill-table-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error loading data. Check console.</td></tr>';
+        }
+    }
+
+    fetchBills();
+</script>
+
 </body>
 </html>
